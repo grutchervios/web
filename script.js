@@ -1,14 +1,8 @@
-// =============================================
-// VIDEOGAME HUB - MAIN JAVASCRIPT
-// =============================================
-
 document.addEventListener('DOMContentLoaded', function() {
 
-    // ========== 1. DARK / LIGHT MODE TOGGLE ==========
     const themeToggleBtn = document.getElementById('theme-toggle');
     
     if (themeToggleBtn) {
-        // Comprobar si el usuario ya tenía un tema guardado
         const savedTheme = localStorage.getItem('vgHubTheme');
         if (savedTheme === 'light') {
             document.body.classList.add('light-mode');
@@ -27,8 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
-    // ========== 2. SEARCH FILTER (Solo en Reviews) ==========
     const searchInput = document.getElementById('review-search');
     
     if (searchInput) {
@@ -49,8 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-
-    // ========== 3. SMOOTH SCROLL PARA ENLACES INTERNOS ==========
     document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
@@ -68,8 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    // ========== 4. ANIMACIÓN DE ENTRADA PARA CARDS ==========
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -83,8 +71,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }, observerOptions);
-
-    // Observar game cards, guide cards, news items
     document.querySelectorAll('.game-card, .guide-card, .news-item, .forum-card').forEach(function(card) {
         card.style.opacity = '0';
         card.style.transform = 'translateY(30px)';
