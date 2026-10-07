@@ -1,0 +1,1 @@
+<?php require_once __DIR__.'/../config/database.php';if(!isset($_SESSION['user_id']))exit('No autorizado');$s=$pdo->prepare("INSERT INTO comments(user_id,anime_id,content) VALUES(?,?,?)");$s->execute([$_SESSION['user_id'],(int)$_POST['anime_id'],trim($_POST['content'])]);header('Location:../anime.php?id='.(int)$_POST['anime_id']);

@@ -1,0 +1,9 @@
+<?php
+require_once __DIR__.'/config/database.php';
+$pdo->exec("DELETE FROM posts WHERE thread_id IN (SELECT id FROM threads WHERE last_activity < NOW() - INTERVAL 4 DAY)");
+$pdo->exec("DELETE FROM threads WHERE last_activity < NOW() - INTERVAL 4 DAY");
+$threads=$pdo->query("SELECT t.*,COUNT(p.id) replies FROM threads t LEFT JOIN posts p ON p.thread_id=t.id GROUP BY t.id ORDER BY t.last_activity DESC")->fetchAll();
+if($_SERVER['REQUEST_METHOD']==='POST' && isset($_SESSION['user_id'])){$s=$pdo->prepare("INSERT INTO threads(title,content,user_id,last_activity) VALUES(?,?,?,NOW())");$s->execute([trim($_POST['title']),trim($_POST['content']),$_SESSION['user_id']]);header('Location:forum.php');exit;}
+?><!DOCTYPE html><html lang="es"><head><?php include __DIR__.'/partials/head.php';?></head><body><?php include __DIR__.'/partials/nav.php';?><main class="container"><section class="forum-head"><div><p class="eyebrow">✦ ANIME FORUM</p><h1>El tablón</h1><p class="muted">Los hilos sin actividad durante 4 días desaparecen automáticamente.</p></div></section>
+<?php if(isset($_SESSION['user_id'])):?><form class="thread-form" method="post"><input name="title" maxlength="120" placeholder="Título del hilo" required><textarea name="content" maxlength="2000" placeholder="Escribe algo..." required></textarea><button class="btn">Crear hilo</button></form><?php else:?><div class="notice">Inicia sesión para crear hilos.</div><?php endif;?>
+<div class="threads"><?php foreach($threads as $t):?><a class="thread" href="thread.php?id=<?=$t['id']?>"><div><h3><?=htmlspecialchars($t['title'])?></h3><p><?=htmlspecialchars(mb_strimwidth($t['content'],0,130,'…'))?></p></div><span><?=$t['replies']?> 💬</span></a><?php endforeach;?></div></main></body></html>

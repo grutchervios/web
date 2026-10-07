@@ -1,0 +1,1 @@
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('textarea').forEach(t=>{const c=document.createElement('small');c.className='muted';t.after(c);const update=()=>c.textContent=`${t.value.length}/${t.maxLength||1000}`;t.addEventListener('input',update);update()})});

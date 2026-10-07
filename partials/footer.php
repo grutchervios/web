@@ -1,0 +1,1 @@
+<footer><span>ANIMEVERSE ✦ hecho con PHP + MySQL</span><span>Stay weird. Watch anime.</span></footer>

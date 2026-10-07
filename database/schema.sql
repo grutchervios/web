@@ -1,0 +1,12 @@
+CREATE DATABASE IF NOT EXISTS animeverse CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE animeverse;
+CREATE TABLE users(id INT AUTO_INCREMENT PRIMARY KEY,username VARCHAR(40) NOT NULL UNIQUE,email VARCHAR(120) NOT NULL UNIQUE,password VARCHAR(255) NOT NULL,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE animes(id INT AUTO_INCREMENT PRIMARY KEY,title VARCHAR(150) NOT NULL,description TEXT NOT NULL,cover VARCHAR(500) NOT NULL,year SMALLINT NOT NULL,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE ratings(id INT AUTO_INCREMENT PRIMARY KEY,user_id INT NOT NULL,anime_id INT NOT NULL,rating TINYINT NOT NULL CHECK(rating BETWEEN 1 AND 5),created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,UNIQUE KEY one_rating(user_id,anime_id),FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,FOREIGN KEY(anime_id) REFERENCES animes(id) ON DELETE CASCADE);
+CREATE TABLE comments(id INT AUTO_INCREMENT PRIMARY KEY,user_id INT NOT NULL,anime_id INT NOT NULL,content VARCHAR(1000) NOT NULL,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,FOREIGN KEY(anime_id) REFERENCES animes(id) ON DELETE CASCADE);
+CREATE TABLE threads(id INT AUTO_INCREMENT PRIMARY KEY,title VARCHAR(120) NOT NULL,content TEXT NOT NULL,user_id INT NOT NULL,last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE);
+CREATE TABLE posts(id INT AUTO_INCREMENT PRIMARY KEY,thread_id INT NOT NULL,user_id INT NOT NULL,content TEXT NOT NULL,created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(thread_id) REFERENCES threads(id) ON DELETE CASCADE,FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE);
+INSERT INTO animes(title,description,cover,year) VALUES
+('Bocchi the Rock!','Una guitarrista introvertida descubre que tocar en una banda puede cambiarlo todo.','https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=700&q=80',2022),
+('Your Name','Dos adolescentes conectados por un extraño fenómeno empiezan a buscarse.','https://images.unsplash.com/photo-1535016120720-40c646be5580?auto=format&fit=crop&w=700&q=80',2016),
+('Violet Evergarden','Una joven intenta comprender las emociones humanas mientras escribe cartas para otras personas.','https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=700&q=80',2018);
