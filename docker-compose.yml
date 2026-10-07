@@ -1,0 +1,45 @@
+services:
+
+  web:
+    build: .
+    container_name: animeverse-web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+    environment:
+      DB_HOST: db
+      DB_NAME: animeverse
+      DB_USER: animeuser
+      DB_PASS: animepass
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:11
+    container_name: animeverse-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpass
+      MARIADB_DATABASE: animeverse
+      MARIADB_USER: animeuser
+      MARIADB_PASSWORD: animepass
+    volumes:
+      - animeverse-db:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: animeverse-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: animeuser
+      PMA_PASSWORD: animepass
+    depends_on:
+      - db
+
+volumes:
+  animeverse-db:
